@@ -49,30 +49,25 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Categories Links */}
+          {/* Platform Info */}
           <div>
             <h4 className="text-white font-semibold text-xs tracking-wider uppercase mb-3">
-              أشهر الأقسام
+              عن المنصة
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/category/egyptian-artists" className="hover:text-rose-400 transition-colors">
-                  فنانات مصر
+                <Link href="/categories" className="hover:text-rose-400 transition-colors">
+                  تصفح كافة الأقسام
                 </Link>
               </li>
               <li>
-                <Link href="/category/arab-artists" className="hover:text-rose-400 transition-colors">
-                  فنانات عرب
+                <Link href="/search" className="hover:text-rose-400 transition-colors">
+                  البحث في الفيديوهات
                 </Link>
               </li>
               <li>
-                <Link href="/category/tango-live" className="hover:text-rose-400 transition-colors">
-                  تانجو ولايف
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/social-media-stars" className="hover:text-rose-400 transition-colors">
-                  مشهورات السوشيال
+                <Link href="/admin" className="hover:text-rose-400 transition-colors">
+                  إدارة المحتوى
                 </Link>
               </li>
             </ul>

@@ -17,12 +17,6 @@ const SETTINGS_FILE = path.join(WRITABLE_DIR, "settings.json");
 // Default Fallback Data
 const DEFAULT_CATEGORIES: Category[] = [
   { id: "cat-1", name: "الكل", slug: "all" },
-  { id: "cat-2", name: "فنانات مصر", slug: "egyptian-artists" },
-  { id: "cat-3", name: "فنانات عرب", slug: "arab-artists" },
-  { id: "cat-4", name: "مشهورات السوشيال", slug: "social-media-stars" },
-  { id: "cat-5", name: "تانجو ولايف", slug: "tango-live" },
-  { id: "cat-6", name: "فيديوهات حصرية", slug: "exclusive" },
-  { id: "cat-7", name: "منوعات وجديد", slug: "trending" },
 ];
 
 const DEFAULT_VIDEOS: Video[] = [];
