@@ -1,12 +1,20 @@
 import fs from "fs";
 import path from "path";
+import os from "os";
 import { Video, Category, SiteSettings } from "@/types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const VIDEOS_FILE = path.join(DATA_DIR, "videos.json");
-const CATEGORIES_FILE = path.join(DATA_DIR, "categories.json");
-const SETTINGS_FILE = path.join(DATA_DIR, "settings.json");
+// Determine environments
+const isServerless = process.env.VERCEL === "1" || process.env.AWS_LAMBDA_FUNCTION_NAME !== undefined;
+const SEED_DIR = path.join(process.cwd(), "data");
 
+// In serverless (Vercel), write to /tmp; in local environment, write to project data folder
+const WRITABLE_DIR = isServerless ? path.join(os.tmpdir(), "darigate_data") : SEED_DIR;
+
+const VIDEOS_FILE = path.join(WRITABLE_DIR, "videos.json");
+const CATEGORIES_FILE = path.join(WRITABLE_DIR, "categories.json");
+const SETTINGS_FILE = path.join(WRITABLE_DIR, "settings.json");
+
+// Default Fallback Data
 const DEFAULT_CATEGORIES: Category[] = [
   { id: "cat-1", name: "الكل", slug: "all" },
   { id: "cat-2", name: "فنانات مصر", slug: "egyptian-artists" },
@@ -115,54 +123,113 @@ const DEFAULT_VIDEOS: Video[] = [
 const DEFAULT_SETTINGS: SiteSettings = {
   siteName: "الفن والجمال",
   siteDescription: "الموقع الأفضل المتخصص في فيديوهات وصور المشاهير والفنانات ومشهورات السوشيال ميديا بجودة فائقة.",
-  adminPin: "admin123",
+  adminPin: process.env.ADMIN_PIN || "admin123",
   adBannerCode: "",
 };
 
-function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+// Global in-memory cache to persist data across serverless warm requests
+declare global {
+  var __darigate_videos: Video[] | undefined;
+  var __darigate_categories: Category[] | undefined;
+  var __darigate_settings: SiteSettings | undefined;
+}
+
+function ensureDir() {
+  try {
+    if (!fs.existsSync(WRITABLE_DIR)) {
+      fs.mkdirSync(WRITABLE_DIR, { recursive: true });
+    }
+  } catch (err) {
+    console.warn("Could not create WRITABLE_DIR, using in-memory only:", err);
   }
+}
+
+// Safely read initial seed file if exists
+function readInitialSeed<T>(filename: string, defaultVal: T): T {
+  try {
+    const seedPath = path.join(SEED_DIR, filename);
+    if (fs.existsSync(seedPath)) {
+      const data = fs.readFileSync(seedPath, "utf-8");
+      return JSON.parse(data);
+    }
+  } catch (e) {
+    console.warn(`Could not read seed file ${filename}:`, e);
+  }
+  return defaultVal;
 }
 
 export function getCategories(): Category[] {
-  try {
-    ensureDataDir();
-    if (!fs.existsSync(CATEGORIES_FILE)) {
-      fs.writeFileSync(CATEGORIES_FILE, JSON.stringify(DEFAULT_CATEGORIES, null, 2), "utf-8");
-      return DEFAULT_CATEGORIES;
-    }
-    const data = fs.readFileSync(CATEGORIES_FILE, "utf-8");
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Error reading categories:", err);
-    return DEFAULT_CATEGORIES;
+  if (globalThis.__darigate_categories && globalThis.__darigate_categories.length > 0) {
+    return globalThis.__darigate_categories;
   }
+
+  try {
+    ensureDir();
+    if (fs.existsSync(CATEGORIES_FILE)) {
+      const data = fs.readFileSync(CATEGORIES_FILE, "utf-8");
+      const parsed = JSON.parse(data);
+      globalThis.__darigate_categories = parsed;
+      return parsed;
+    }
+  } catch (err) {
+    console.warn("Error reading categories from writable file:", err);
+  }
+
+  const initial = readInitialSeed("categories.json", DEFAULT_CATEGORIES);
+  globalThis.__darigate_categories = initial;
+  saveCategories(initial);
+  return initial;
 }
 
 export function saveCategories(categories: Category[]): void {
-  ensureDataDir();
-  fs.writeFileSync(CATEGORIES_FILE, JSON.stringify(categories, null, 2), "utf-8");
-}
-
-export function getVideos(): Video[] {
+  globalThis.__darigate_categories = categories;
   try {
-    ensureDataDir();
-    if (!fs.existsSync(VIDEOS_FILE)) {
-      fs.writeFileSync(VIDEOS_FILE, JSON.stringify(DEFAULT_VIDEOS, null, 2), "utf-8");
-      return DEFAULT_VIDEOS;
+    ensureDir();
+    fs.writeFileSync(CATEGORIES_FILE, JSON.stringify(categories, null, 2), "utf-8");
+    if (!isServerless && WRITABLE_DIR !== SEED_DIR) {
+      fs.writeFileSync(path.join(SEED_DIR, "categories.json"), JSON.stringify(categories, null, 2), "utf-8");
     }
-    const data = fs.readFileSync(VIDEOS_FILE, "utf-8");
-    return JSON.parse(data);
   } catch (err) {
-    console.error("Error reading videos:", err);
-    return DEFAULT_VIDEOS;
+    console.warn("Writing categories to disk failed (operating in memory mode):", err);
   }
 }
 
+export function getVideos(): Video[] {
+  if (globalThis.__darigate_videos && globalThis.__darigate_videos.length > 0) {
+    return globalThis.__darigate_videos;
+  }
+
+  try {
+    ensureDir();
+    if (fs.existsSync(VIDEOS_FILE)) {
+      const data = fs.readFileSync(VIDEOS_FILE, "utf-8");
+      const parsed = JSON.parse(data);
+      globalThis.__darigate_videos = parsed;
+      return parsed;
+    }
+  } catch (err) {
+    console.warn("Error reading videos from writable file:", err);
+  }
+
+  const initial = readInitialSeed("videos.json", DEFAULT_VIDEOS);
+  globalThis.__darigate_videos = initial;
+  saveVideos(initial);
+  return initial;
+}
+
 export function saveVideos(videos: Video[]): void {
-  ensureDataDir();
-  fs.writeFileSync(VIDEOS_FILE, JSON.stringify(videos, null, 2), "utf-8");
+  // Always update in-memory state first
+  globalThis.__darigate_videos = videos;
+
+  try {
+    ensureDir();
+    fs.writeFileSync(VIDEOS_FILE, JSON.stringify(videos, null, 2), "utf-8");
+    if (!isServerless && WRITABLE_DIR !== SEED_DIR) {
+      fs.writeFileSync(path.join(SEED_DIR, "videos.json"), JSON.stringify(videos, null, 2), "utf-8");
+    }
+  } catch (err) {
+    console.warn("Writing videos to disk failed (operating in memory mode):", err);
+  }
 }
 
 export function getVideoById(id: string): Video | null {
@@ -202,8 +269,8 @@ export function addVideo(videoData: {
     description: videoData.description || "",
   };
 
-  videos.unshift(newVideo);
-  saveVideos(videos);
+  const updatedVideos = [newVideo, ...videos];
+  saveVideos(updatedVideos);
   return newVideo;
 }
 
@@ -223,7 +290,10 @@ export function updateVideo(id: string, updateData: Partial<Video>): Video | nul
 export function deleteVideo(id: string): boolean {
   const videos = getVideos();
   const filtered = videos.filter((v) => v.id !== id);
-  if (filtered.length === videos.length) return false;
+  if (filtered.length === videos.length) {
+    console.warn(`Video with ID ${id} not found for deletion`);
+    return false;
+  }
   saveVideos(filtered);
   return true;
 }
@@ -236,8 +306,8 @@ export function addCategory(name: string): Category {
     name: name.trim(),
     slug,
   };
-  categories.push(newCat);
-  saveCategories(categories);
+  const updatedCategories = [...categories, newCat];
+  saveCategories(updatedCategories);
   return newCat;
 }
 
@@ -250,23 +320,45 @@ export function deleteCategory(id: string): boolean {
 }
 
 export function getSettings(): SiteSettings {
-  try {
-    ensureDataDir();
-    if (!fs.existsSync(SETTINGS_FILE)) {
-      fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), "utf-8");
-      return DEFAULT_SETTINGS;
-    }
-    const data = fs.readFileSync(SETTINGS_FILE, "utf-8");
-    return JSON.parse(data);
-  } catch (err) {
-    return DEFAULT_SETTINGS;
+  if (globalThis.__darigate_settings) {
+    return globalThis.__darigate_settings;
   }
+
+  try {
+    ensureDir();
+    if (fs.existsSync(SETTINGS_FILE)) {
+      const data = fs.readFileSync(SETTINGS_FILE, "utf-8");
+      const parsed = JSON.parse(data);
+      if (process.env.ADMIN_PIN) {
+        parsed.adminPin = process.env.ADMIN_PIN;
+      }
+      globalThis.__darigate_settings = parsed;
+      return parsed;
+    }
+  } catch (err) {
+    console.warn("Error reading settings from writable file:", err);
+  }
+
+  const initial = readInitialSeed("settings.json", DEFAULT_SETTINGS);
+  if (process.env.ADMIN_PIN) {
+    initial.adminPin = process.env.ADMIN_PIN;
+  }
+  globalThis.__darigate_settings = initial;
+  return initial;
 }
 
 export function updateSettings(settings: Partial<SiteSettings>): SiteSettings {
   const current = getSettings();
   const updated = { ...current, ...settings };
-  ensureDataDir();
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2), "utf-8");
+  globalThis.__darigate_settings = updated;
+  try {
+    ensureDir();
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2), "utf-8");
+    if (!isServerless && WRITABLE_DIR !== SEED_DIR) {
+      fs.writeFileSync(path.join(SEED_DIR, "settings.json"), JSON.stringify(updated, null, 2), "utf-8");
+    }
+  } catch (err) {
+    console.warn("Writing settings to disk failed:", err);
+  }
   return updated;
 }
