@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# منصة الفن والجمال - موقع الفيديوهات الحصرية
 
-## Getting Started
+منصة متكاملة لعرض وبث الفيديوهات مصممة خصيصاً بنفس أسلوب وتخطيط موقع **fngml.com**، مع واجهة داكنة مريحة للعين، ودعم كامل للغة العربية (RTL)، ولوحة تحكم احترافية وسريعة تمكنك من إضافة الفيديوهات عن طريق وضع (اسم الفيديو، رابط الفيديو، ورابط الصورة المصغرة والقسم).
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 المميزات الرئيسية للموقع
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **واجهة داكنة أنيقة وعصرية (Dark Cinematic Theme):**
+   - تصميم متناسق ومريح للعين مع تأثيرات تفاعلية ناعمة.
+   - دعم كامل للغة العربية وتنسيق النصوص من اليمين لليسار (RTL).
+   - استجابة تامة مع شاشات الهواتف الذكية والأجهزة اللوحية وأجهزة الكمبيوتر.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **مشغل فيديو متطور ومرن (Hybrid Video Player):**
+   - يدعم تشغيل الروابط المباشرة (`.mp4` أو ملفات الاستضافة المباشرة).
+   - يدعم تشغيل روابط التضمين (`iframe` أو مشغلات الفيديو الخارجية مثل Dailymotion, YouTube, Streamtape, DoodStream, وغيرها).
+   - عداد تلقائي للمشاهدات، أزرار إعجاب ومشاركة وتحميل.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **لوحة تحكم إدارية سريعة وسهلة (`/admin`):**
+   - محمية بكلمة مرور خاصة بالمدير (الافتراضية: `admin123`).
+   - إضافة فيديو جديد في ثوانٍ عبر إدخال:
+     * **اسم / عنوان الفيديو**
+     * **رابط الفيديو**
+     * **رابط الصورة المصغرة (مع معاينة حية فورية للبطاقة قبل الحفظ)**
+     * **القسم والمدة والوسوم**
+   - إدارة وحذف الفيديوهات القديمة والتنقل بينها.
+   - إضافة وحذف تصنيفات وأقسام الموقع.
+   - إحصائيات سريعة لإجمالي الفيديوهات والمشاهدات والأقسام.
 
-## Learn More
+4. **نظام تصنيفات وتصفح ذكي:**
+   - شريط أقسام علوي سريع بتمرير أفقي سلس.
+   - ترقيم الصفحات (Pagination) للتنقل بين الصفحات مثل الموقع الأصلي تماماً.
+   - محرك بحث بالاسم والوسوم والتصنيفات.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 💻 التشغيل المحلي على جهازك (Local Development)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+لتشغيل الموقع على جهازك والتحكم به:
 
-## Deploy on Vercel
+1. افتح مجلد المشروع في الطرفية (Terminal).
+2. قم بتثبيت الحزم (إذا لم تكن مثبتة):
+   ```bash
+   npm install
+   ```
+3. تشغيل الخادم في وضع التطوير:
+   ```bash
+   npm run dev
+   ```
+4. افتح المتصفح على:
+   ```
+   http://localhost:3000
+   ```
+   - لدخول لوحة التحكم: `http://localhost:3000/admin`
+   - كلمة مرور الدخول: `admin123`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🌐 دليل رفع الموقع ونشره أونلاين (Online Deployment)
+
+لجعل موقعك متاحاً لأي شخص على الإنترنت مجاناً، إليك الخطوات البسيطة والمجانية 100%:
+
+### الخيار الأول: النشر عبر Vercel (الأسرع والأسهل - مجاني 100%)
+
+1. **إنشاء حساب مجاني على GitHub و Vercel:**
+   - توجه إلى [github.com](https://github.com) وأنشئ حساباً مجانياً إن لم يكن لديك.
+   - توجه إلى [vercel.com](https://vercel.com) وسجل الدخول باستخدام حساب GitHub الخاص بك.
+
+2. **رفع الكود إلى مستودعك على GitHub:**
+   افتح الطرفية داخل مجلد المشروع ونفذ:
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/اسم-حسابك/اسم-المستودع.git
+   git push -u origin main
+   ```
+
+3. **النشر على Vercel:**
+   - في لوحة تحكم Vercel، اضغط على **"Add New..."** ثم **"Project"**.
+   - اختر المستودع الخاص بالمشروع واضغط **"Import"**.
+   - اترك الإعدادات الافتراضية كما هي واضغط على **"Deploy"**.
+   - خلال دقيقة واحدة فقط، سيظهر لك رابط الموقع أونلاين مثل:
+     ```
+     https://your-site-name.vercel.app
+     ```
+   - يمكنك ربط أي دومين خاص بك (Custom Domain مثل `mysite.com`) من تبويب **Domains** داخل إعدادات المشروع مجاناً!
+
+---
+
+### الخيار الثاني: النشر عبر Render (كخادم Node.js متكامل)
+
+1. سجل الدخول إلى [render.com](https://render.com).
+2. اضغط على **"New +"** ثم اختر **"Web Service"**.
+3. اربط مستودع GitHub الخاص بالمشروع.
+4. الإعدادات المطلوبة:
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+5. اضغط على **"Create Web Service"** وسيتم النشر وتوليد رابط فوري للموقع.
