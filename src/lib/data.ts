@@ -25,100 +25,7 @@ const DEFAULT_CATEGORIES: Category[] = [
   { id: "cat-7", name: "منوعات وجديد", slug: "trending" },
 ];
 
-const DEFAULT_VIDEOS: Video[] = [
-  {
-    id: "vid-101",
-    title: "مقطع حصري استعراض المشاهير بجودة عالية HD",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&auto=format&fit=crop&q=60",
-    duration: "10:24",
-    category: "فنانات مصر",
-    tags: ["حصري", "فنانات", "جديد"],
-    views: 15420,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-    featured: true,
-  },
-  {
-    id: "vid-102",
-    title: "فيديو مسرب من البث المباشر لأجمل الإطلالات والمشاهد",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&auto=format&fit=crop&q=60",
-    duration: "14:50",
-    category: "تانجو ولايف",
-    tags: ["لايف", "بث", "مشاهير"],
-    views: 28900,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-    featured: true,
-  },
-  {
-    id: "vid-103",
-    title: "أحدث ظهور مميز لنجمة السوشيال ميديا بفستان أنيق",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&auto=format&fit=crop&q=60",
-    duration: "06:15",
-    category: "مشهورات السوشيال",
-    tags: ["مشهورات", "انستغرام", "تيك_توك"],
-    views: 9340,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-  },
-  {
-    id: "vid-104",
-    title: "كواليس حصرية وتفاصيل ليلة الحفل كاملة بجودة فائقة",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=60",
-    duration: "18:05",
-    category: "فنانات عرب",
-    tags: ["كواليس", "عرب", "حفلات"],
-    views: 34100,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 36).toISOString(),
-    featured: true,
-  },
-  {
-    id: "vid-105",
-    title: "مقطع ساخن ومثير من أحدث جلسة تصوير للموديل الشهيرة",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&auto=format&fit=crop&q=60",
-    duration: "08:32",
-    category: "فيديوهات حصرية",
-    tags: ["جلسة تصوير", "موديل", "حصري"],
-    views: 45200,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
-  },
-  {
-    id: "vid-106",
-    title: "فيديو تانجو لايف المشهورة مع الداعمين واستعراض خاص",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800&auto=format&fit=crop&q=60",
-    duration: "12:18",
-    category: "تانجو ولايف",
-    tags: ["تانجو", "لايف", "فضيحة"],
-    views: 67300,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 60).toISOString(),
-    featured: true,
-  },
-  {
-    id: "vid-107",
-    title: "لقطات مميزة ورقص شرقي في حفل خاص كامل بدون حذف",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=60",
-    duration: "15:40",
-    category: "فنانات مصر",
-    tags: ["رقص", "حفل", "مصر"],
-    views: 22100,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
-  },
-  {
-    id: "vid-108",
-    title: "فيديو المشهورة اللبنانية تتألق بإطلالة نارية ومثيرة",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    thumbnailUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&auto=format&fit=crop&q=60",
-    duration: "09:55",
-    category: "فنانات عرب",
-    tags: ["لبنان", "عرب", "إغراء"],
-    views: 31050,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 84).toISOString(),
-  },
-];
+const DEFAULT_VIDEOS: Video[] = [];
 
 const DEFAULT_SETTINGS: SiteSettings = {
   siteName: "الفن والجمال",
@@ -159,7 +66,7 @@ function readInitialSeed<T>(filename: string, defaultVal: T): T {
 }
 
 export function getCategories(): Category[] {
-  if (globalThis.__darigate_categories && globalThis.__darigate_categories.length > 0) {
+  if (globalThis.__darigate_categories !== undefined) {
     return globalThis.__darigate_categories;
   }
 
@@ -195,7 +102,7 @@ export function saveCategories(categories: Category[]): void {
 }
 
 export function getVideos(): Video[] {
-  if (globalThis.__darigate_videos && globalThis.__darigate_videos.length > 0) {
+  if (globalThis.__darigate_videos !== undefined) {
     return globalThis.__darigate_videos;
   }
 
